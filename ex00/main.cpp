@@ -25,7 +25,10 @@ int main(int ac, char const *av[])
             std::string value = line.substr(pos + 1);
             ltrim(value);
             rtrim(value);
-            price[date] = atof(value.c_str());
+            float d;
+            std::stringstream ss(value);
+            ss >> d;
+            price[date] = d;
         }
     }
 
