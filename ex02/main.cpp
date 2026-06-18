@@ -39,7 +39,8 @@ int main(int ac, char const *av[])
     {
         std::cout << v[i];
         if (v.size() - 1!= i)
-            std::cout << " ";
+        std::cout << " ";
     }
     std::cout << "\n";
+    std::cout << "Time to process a range of " << v.size() << " elements with std::[..] : " << elapsed << " us" << "\n";
 }
