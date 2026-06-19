@@ -3,6 +3,7 @@
 int main(int ac, char const *av[])
 {
     std::vector<int> v;
+    std::list<int> l;
     if (ac < 3)
         return (std::cout << "ERROR\n", 1);
     for (int i = 1; i < ac; i++)
@@ -21,6 +22,7 @@ int main(int ac, char const *av[])
             return 1;
         }
         v.push_back(a);
+        l.push_back(a);
     }
     std::cout << "Before: ";
     for (size_t i = 0; i < v.size(); i++)
@@ -34,6 +36,10 @@ int main(int ac, char const *av[])
     v = fordJohnson(v);
     clock_t end = clock();
     double elapsed = (double)(end - start) / CLOCKS_PER_SEC * 1000000;
+    clock_t start1 = clock();
+    l = fordJohnson(l);
+    clock_t end1 = clock();
+    double elapsed1 = (double)(end1 - start1) / CLOCKS_PER_SEC * 1000000;
     std::cout << "After: ";
     for (size_t i = 0; i < v.size(); i++)
     {
@@ -42,5 +48,6 @@ int main(int ac, char const *av[])
         std::cout << " ";
     }
     std::cout << "\n";
-    std::cout << "Time to process a range of " << v.size() << " elements with std::[..] : " << elapsed << " us" << "\n";
+    std::cout << "Time to process a range of " << v.size() << " elements with std::[vector] : " << elapsed << " us" << "\n";
+    std::cout << "Time to process a range of " << l.size() << " elements with std::[list] : " << elapsed1 << " us" << "\n";
 }
