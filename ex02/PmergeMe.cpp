@@ -1,5 +1,16 @@
 #include "PmergeMe.hpp"
 
+int jacobsthal(size_t n)
+{
+    if (n == 0)
+        return 0;
+    if (n == 1)
+    {
+        return 1;
+    }
+    return jacobsthal(n-1) + 2 * jacobsthal(n-2);
+}
+
 std::vector<int> fordJohnson(std::vector<int> array)
 {
     std::vector<int> larger;
@@ -27,10 +38,38 @@ std::vector<int> fordJohnson(std::vector<int> array)
     }
 
     larger = fordJohnson(larger);
+    int first = larger[0];
     for (size_t i = 0; i < pairs.size(); i++)
     {
-        std::vector<int>::iterator it = std::lower_bound(larger.begin(), larger.end(), pairs[i].first);
-        larger.insert(it, pairs[i].first);
+        if (first == pairs[i].second)
+        {
+            larger.insert(larger.begin(), pairs[i].first);
+            break;
+        }
+    }
+    size_t last_jacob = 1;
+    size_t j = 3;
+
+    while (last_jacob < pairs.size())
+    {
+        size_t curr_jacob = jacobsthal(j);
+        
+        size_t upper_bound = curr_jacob;
+        if (upper_bound > pairs.size())
+        {
+            upper_bound = pairs.size();
+        }
+
+        for (size_t i = upper_bound; i > last_jacob; i--)
+        {
+            int element_to_insert = pairs[i - 1].first;
+
+            std::vector<int>::iterator it = std::lower_bound(larger.begin(), larger.end(), element_to_insert);
+
+            larger.insert(it, element_to_insert);
+        }
+        last_jacob = upper_bound;
+        j++;
     }
     if (straggler != -1)
     {
