@@ -72,3 +72,86 @@ bool check_date(std::string &str)
         return false;
     return true;
 }
+
+int laod_data(std::map<std::string, float> &price, int ac)
+{
+    std::string line;
+    if (ac != 2)
+        return (std::cout << "Error: could not open file\n", 1);
+
+    std::ifstream data("data.csv");
+    if (!data.is_open()) 
+    {
+        std::cout << "Error: could not open file" << std::endl;
+        return 1;
+    }
+    std::getline(data, line);
+    while (std::getline(data, line))
+    {
+        size_t pos = line.find(",");
+        if (pos != std::string::npos)
+        {
+            std::string date = line.substr(0, pos);
+            ltrim(date);
+            rtrim(date);
+            std::string value = line.substr(pos + 1);
+            ltrim(value);
+            rtrim(value);
+            float d;
+            std::stringstream ss(value);
+            ss >> d;
+            price[date] = d;
+        }
+    }
+    return 0;
+}
+
+void process_line(std::string line, std::map<std::string, float> &price, int pos)
+{
+    std::string date = line.substr(0, pos);
+    ltrim(date);
+    rtrim(date);
+    if(!check_date(date))
+    {
+        std::cout << "Error: bad input => " << line << std::endl;
+        return;
+    }
+    std::string value = line.substr(pos + 1);
+    ltrim(value);
+    rtrim(value);
+    if (value.empty())
+    {
+        std::cout << "Error: bad input => " << line << std::endl;
+        return;
+    }
+    float val = check_value(value);
+    if (val == -1)
+    {
+        std::cout << "Error: not a number.\n";
+        return;
+    }
+    else if (val == -2)
+    {
+        std::cout << "Error: not a positive number.\n";
+        return; 
+    }
+    else if (val == -3)
+    {
+        std::cout << "Error: too large a number.\n";
+        return;
+    }
+    std::map<std::string, float>::iterator it = price.lower_bound(date);
+    if (it->first == date)
+    {
+        std::cout << date << " => " << val << " = " << val * it->second << std::endl;
+    }
+    else if(it == price.begin())
+    {
+        std::cout << "Error: no rate for this date.\n";
+    }
+    else
+    {
+        it--;
+        std::cout << date << " => " << val << " = " << val * it->second << std::endl;
+    }
+}
