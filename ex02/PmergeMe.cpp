@@ -38,17 +38,8 @@ std::vector<int> fordJohnson(std::vector<int> array)
     }
 
     larger = fordJohnson(larger);
-    int first = larger[0];
-    for (size_t i = 0; i < pairs.size(); i++)
-    {
-        if (first == pairs[i].second)
-        {
-            larger.insert(larger.begin(), pairs[i].first);
-            break;
-        }
-    }
-    size_t last_jacob = 1;
-    size_t j = 3;
+    size_t last_jacob = 0;
+    size_t j = 2;
 
     while (last_jacob < pairs.size())
     {
@@ -106,17 +97,8 @@ std::deque<int> fordJohnson(std::deque<int> array)
     }
 
     larger = fordJohnson(larger);
-    int first = larger[0];
-    for (size_t i = 0; i < pairs.size(); i++)
-    {
-        if (first == pairs[i].second)
-        {
-            larger.insert(larger.begin(), pairs[i].first);
-            break;
-        }
-    }
-    size_t last_jacob = 1;
-    size_t j = 3;
+    size_t last_jacob = 0;
+    size_t j = 2;
 
     while (last_jacob < pairs.size())
     {
@@ -148,82 +130,7 @@ std::deque<int> fordJohnson(std::deque<int> array)
 }
 
 
-std::list<int> fordJohnson(std::list<int> array)
-{
-    std::list<int> larger;
-    std::list<std::pair<int,int> > pairs;
-
-    if (array.size() <= 1)
-        return array;
-
-    int straggler = -1; 
-    if (array.size() % 2 != 0)
-        straggler = array.back();
-    
-    std::list<int>::iterator it = array.begin();
-    while (it != array.end())
-    {
-        std::list<int>::iterator first = it;
-        ++it;
-        if (it == array.end()) 
-            break;
-        std::list<int>::iterator second = it;
-        ++it;
-        if (*first > *second)
-        {
-            std::swap(*first, *second);
-        }
-        pairs.push_back(std::make_pair(*first, *second));
-    }
-
-    for (std::list<std::pair<int,int> >::iterator it = pairs.begin(); it !=  pairs.end(); it++)
-    {
-        larger.push_back(it->second);
-    }
-
-    larger = fordJohnson(larger);
-    int first = *larger.begin();
-    for (std::list<std::pair<int,int> >::iterator it = pairs.begin(); it != pairs.end(); it++)
-    {
-        if (first == it->second)
-        {
-            larger.insert(larger.begin(), it->first);
-            break;
-        }
-    }
-    size_t last_jacob = 1;
-    size_t j = 3;
-    while (last_jacob < pairs.size())
-    {
-        size_t curr_jacob = jacobsthal(j);
-
-        size_t upper_bound = curr_jacob;
-        if (upper_bound > pairs.size())
-        {
-            upper_bound = pairs.size();
-        }
-        for (size_t i = upper_bound; i > last_jacob; i--)
-        {
-            std::list<std::pair<int,int> >::iterator pair_it = pairs.begin();
-            std::advance(pair_it, i-1);
-            std::list<int>::iterator to_find = std::lower_bound(larger.begin(), larger.end(), pair_it->second);
-            std::list<int>::iterator it = std::lower_bound(larger.begin(), to_find, pair_it->first);
-
-            larger.insert(it, pair_it->first);
-        }
-        last_jacob = upper_bound;
-        j++;
-    }
-    
-    if (straggler != -1)
-    {
-        std::list<int>::iterator it = std::lower_bound(larger.begin(), larger.end(), straggler);
-        larger.insert(it, straggler);
-    }
-    return larger;
-}
-
-int parser(std::vector<int> &v, std::list<int> &l, int ac, char const *av[])
+int parser(std::vector<int> &v, std::deque<int> &l, int ac, char const *av[])
 {
     if (ac < 3)
         return (std::cout << "ERROR\n", 1);
@@ -249,14 +156,14 @@ int parser(std::vector<int> &v, std::list<int> &l, int ac, char const *av[])
 }
 
 
-void sorting_printing(std::vector<int> &v, std::list<int> &l)
+void sorting_printing(std::vector<int> &v, std::deque<int> &l)
 {
     std::cout << "Before: ";
     for (size_t i = 0; i < v.size(); i++)
     {
         std::cout << v[i];
         if (v.size() - 1 != i)
-        std::cout << " ";
+            std::cout << " ";
     }
     std::cout << "\n";
     clock_t start = clock();
@@ -272,10 +179,10 @@ void sorting_printing(std::vector<int> &v, std::list<int> &l)
     {
         std::cout << v[i];
         if (v.size() - 1 != i)
-        std::cout << " ";
+            std::cout << " ";
     }
     std::cout << "\n";
     std::cout << "Time to process a range of " << v.size() << " elements with std::[vector] : " << elapsed << " us" << "\n";
-    std::cout << "Time to process a range of " << l.size() << " elements with std::[list] : " << elapsed1 << " us" << "\n";
+    std::cout << "Time to process a range of " << l.size() << " elements with std::[deque] : " << elapsed1 << " us" << "\n";
 
 }

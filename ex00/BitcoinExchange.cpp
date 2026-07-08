@@ -4,11 +4,10 @@
 void rtrim(std::string &s) 
 {
     size_t end = s.find_last_not_of(" ");
-    if (end != std::string::npos) {
-        s.erase(end + 1);
-    } else {
+    if (end != std::string::npos) 
+        s.erase(end + 1); 
+    else
         s.clear();
-    }
 }
 
 void ltrim(std::string &s) 
@@ -22,14 +21,16 @@ float check_value(std::string &str)
     std::stringstream ss(str);
     float val;
     ss >> val;
+
     if (ss.fail() || !ss.eof())
-    {
         return -1;
-    }
+
     if (val < 0)
         return -2;
+
     else if (val > 1000)
         return -3;
+
     return val;
 }
 
@@ -58,6 +59,8 @@ bool is_valid(std::string &str)
     int day = atoi(str.substr(8,2).c_str());
     if (month > 12 || month < 1)
         return false;
+    if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))
+        arr[1] = 29;
     if (day < 1 || day > arr[month-1])
         return false;
     (void)year;
